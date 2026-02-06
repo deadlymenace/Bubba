@@ -20,11 +20,24 @@
     <style>
       body {
         font-family: "Poppins", sans-serif;
-        overflow: hidden; /* Prevent scrolling */
+        overflow: hidden;
+        background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 30%, #FFD1DC 60%, #FFC0CB 100%);
       }
 
       .script-font {
         font-family: "Great Vibes", cursive;
+      }
+
+      /* Hello Kitty background pattern */
+      #hk-bg-pattern {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3C!-- Bow --%3E%3Cellipse cx='25' cy='20' rx='14' ry='9' fill='%23FF69B4' opacity='0.4' transform='rotate(-25 25 20)'/%3E%3Cellipse cx='55' cy='20' rx='14' ry='9' fill='%23FF69B4' opacity='0.4' transform='rotate(25 55 20)'/%3E%3Ccircle cx='40' cy='20' r='5' fill='%23FF1493' opacity='0.4'/%3E%3C!-- Whiskers --%3E%3Cline x1='15' y1='55' x2='35' y2='58' stroke='%23FFB6C1' stroke-width='1.5' opacity='0.35'/%3E%3Cline x1='15' y1='60' x2='35' y2='60' stroke='%23FFB6C1' stroke-width='1.5' opacity='0.35'/%3E%3Cline x1='15' y1='65' x2='35' y2='62' stroke='%23FFB6C1' stroke-width='1.5' opacity='0.35'/%3E%3Cline x1='105' y1='55' x2='85' y2='58' stroke='%23FFB6C1' stroke-width='1.5' opacity='0.35'/%3E%3Cline x1='105' y1='60' x2='85' y2='60' stroke='%23FFB6C1' stroke-width='1.5' opacity='0.35'/%3E%3Cline x1='105' y1='65' x2='85' y2='62' stroke='%23FFB6C1' stroke-width='1.5' opacity='0.35'/%3E%3C!-- Stars --%3E%3Ctext x='90' y='25' font-size='10' fill='%23FFD1DC' opacity='0.5'%3E%E2%9C%A6%3C/text%3E%3Ctext x='10' y='100' font-size='8' fill='%23FFD1DC' opacity='0.5'%3E%E2%9C%A6%3C/text%3E%3Ctext x='70' y='95' font-size='12' fill='%23FFB6C1' opacity='0.4'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 120px 120px;
+      }
+
+      /* Card glow */
+      .card-glow {
+        box-shadow: 0 0 30px rgba(255, 105, 180, 0.3), 0 10px 40px rgba(255, 105, 180, 0.15);
       }
 
       /* Floating Hearts Animation Background */
@@ -98,18 +111,134 @@
           transform: scale(1.1);
         }
       }
+
+      /* ===== Heart Screen Transition ===== */
+      .heart-wipe {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        background-color: #FF69B4;
+        transform: rotate(-45deg) scale(0);
+        transition: transform 0.8s cubic-bezier(0.68, -0.05, 0.27, 1.05);
+        will-change: transform;
+        pointer-events: none;
+      }
+
+      .heart-wipe::before,
+      .heart-wipe::after {
+        content: '';
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #FF69B4;
+      }
+
+      .heart-wipe::before {
+        top: -50px;
+        left: 0;
+      }
+
+      .heart-wipe::after {
+        top: 0;
+        left: 50px;
+      }
+
+      /* ===== Aang Airbending Effects ===== */
+      @keyframes aangEntrance {
+        0% {
+          transform: scale(0.3);
+          opacity: 0;
+        }
+        60% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .aang-enter {
+        animation: aangEntrance 0.4s ease-out forwards;
+      }
+
+      @keyframes windDraw {
+        0% {
+          stroke-dashoffset: 300;
+          opacity: 0;
+        }
+        20% {
+          opacity: 1;
+        }
+        100% {
+          stroke-dashoffset: 0;
+          opacity: 0;
+        }
+      }
+
+      @keyframes windSwirl {
+        0% {
+          transform: scale(0) rotate(0deg);
+          opacity: 0;
+        }
+        50% {
+          opacity: 0.6;
+        }
+        100% {
+          transform: scale(2.5) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .wind-line {
+        stroke-dasharray: 300;
+        stroke-dashoffset: 300;
+        animation: windDraw 0.6s ease-out forwards;
+      }
+
+      .wind-line:nth-child(2) { animation-delay: 0.05s; }
+      .wind-line:nth-child(3) { animation-delay: 0.1s; }
+      .wind-line:nth-child(4) { animation-delay: 0.15s; }
+
+      .wind-swirl {
+        transform-origin: center center;
+        animation: windSwirl 0.8s ease-out forwards;
+      }
+
+      .wind-swirl:nth-child(6) { animation-delay: 0.1s; }
+
+      /* Aang robes flutter */
+      @keyframes robeFlutter {
+        0%, 100% { transform: skewX(0deg); }
+        50% { transform: skewX(-3deg); }
+      }
+
+      .robe-flutter {
+        animation: robeFlutter 0.3s ease-in-out 2;
+        transform-origin: top center;
+      }
     </style>
   </head>
   <body
-    class="bg-gradient-to-br from-pink-100 via-red-50 p-8 to-pink-200 h-screen w-screen flex flex-col items-center justify-center relative select-none"
+    class="p-8 h-screen w-screen flex flex-col items-center justify-center relative select-none"
   >
+    <!-- Hello Kitty Background Pattern -->
+    <div id="hk-bg-pattern" class="fixed inset-0 z-0 pointer-events-none opacity-20"></div>
+
+    <!-- Heart Transition Overlay -->
+    <div id="heart-transition" class="fixed inset-0 z-50 pointer-events-none flex items-center justify-center">
+      <div id="heart-shape" class="heart-wipe"></div>
+    </div>
+
     <!-- Background Decoration -->
     <div id="hearts-container" class="absolute inset-0 overflow-hidden"></div>
 
     <!-- STAGE 1: The Intro / Build Up -->
     <div
       id="intro-card"
-      class="z-10 text-center max-w-lg p-8 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-pink-100 transition-all duration-700"
+      class="z-10 text-center max-w-lg p-8 bg-white/80 backdrop-blur-sm rounded-3xl border border-pink-300 transition-all duration-700 card-glow"
     >
       <h1 class="text-3xl text-pink-600 mb-6 font-semibold" id="intro-text">
         Hey Beautiful...
@@ -120,7 +249,7 @@
 
       <button
         onclick="nextStep()"
-        class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 focus:outline-none ring-4 ring-pink-200"
+        class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 focus:outline-none ring-4 ring-pink-300"
       >
         Click Me
       </button>
@@ -129,7 +258,7 @@
     <!-- STAGE 2: The Question -->
     <div
       id="question-card"
-      class="hidden z-10 text-center max-w-2xl p-6 md:p-12 relative"
+      class="hidden z-10 text-center max-w-2xl p-6 md:p-12 relative bg-white/80 backdrop-blur-sm rounded-3xl border border-pink-300 card-glow"
     >
       <div
         class="text-6xl md:text-8xl text-red-500 mb-4 heartbeat drop-shadow-md"
@@ -152,7 +281,7 @@
         <button
           id="yes-btn"
           onclick="acceptProposal()"
-          class="bg-green-500 hover:bg-green-600 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg transform transition hover:scale-110 ring-4 ring-green-200 z-20"
+          class="bg-pink-500 hover:bg-pink-600 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg transform transition hover:scale-110 ring-4 ring-pink-300 z-20"
         >
           YES!
         </button>
@@ -162,7 +291,7 @@
           id="no-btn"
           onmouseover="dodgeButton()"
           onclick="dodgeButton()"
-          class="bg-gray-400 text-white text-xl font-bold py-4 px-10 rounded-full shadow-lg transition"
+          class="bg-pink-200 text-pink-500 text-xl font-bold py-4 px-10 rounded-full shadow-lg transition"
           style="transition: all 0.2s ease"
         >
           No
@@ -173,7 +302,7 @@
     <!-- STAGE 3: Success -->
     <div
       id="success-card"
-      class="hidden z-10 text-center max-w-2xl p-8 bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-pink-300 fade-in"
+      class="hidden z-10 text-center max-w-2xl p-8 bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-pink-400 card-glow"
     >
       <h1 class="text-6xl md:text-8xl mb-4">🥰🎉</h1>
       <h2 class="script-font text-5xl md:text-7xl text-pink-600 mb-6">
@@ -185,6 +314,60 @@
       </p>
       <div class="mt-8 text-sm text-gray-400">
         Screenshot this and send it to me!
+      </div>
+    </div>
+
+    <!-- Aang Airbending Container -->
+    <div id="aang-container" class="fixed z-30 pointer-events-none" style="display: none;">
+      <svg id="aang-svg" width="120" height="160" viewBox="0 0 120 160">
+        <!-- Head -->
+        <circle cx="60" cy="38" r="28" fill="#FDDCB5"/>
+        <!-- Arrow tattoo -->
+        <path d="M60 10 L48 28 L54 28 L54 24 L66 24 L66 28 L72 28 Z" fill="#4FC3F7"/>
+        <line x1="60" y1="28" x2="60" y2="42" stroke="#4FC3F7" stroke-width="6" stroke-linecap="round"/>
+        <!-- Ears -->
+        <ellipse cx="33" cy="38" rx="5" ry="7" fill="#F0C8A0"/>
+        <ellipse cx="87" cy="38" rx="5" ry="7" fill="#F0C8A0"/>
+        <!-- Eyes -->
+        <ellipse cx="49" cy="38" rx="4" ry="4.5" fill="white"/>
+        <ellipse cx="71" cy="38" rx="4" ry="4.5" fill="white"/>
+        <circle cx="50" cy="38" r="2.5" fill="#555"/>
+        <circle cx="72" cy="38" r="2.5" fill="#555"/>
+        <circle cx="51" cy="37" r="1" fill="white"/>
+        <circle cx="73" cy="37" r="1" fill="white"/>
+        <!-- Eyebrows (determined look) -->
+        <line x1="44" y1="30" x2="54" y2="32" stroke="#8B6914" stroke-width="2" stroke-linecap="round"/>
+        <line x1="76" y1="30" x2="66" y2="32" stroke="#8B6914" stroke-width="2" stroke-linecap="round"/>
+        <!-- Smile -->
+        <path d="M52 48 Q60 54 68 48" fill="none" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Neck -->
+        <rect x="54" y="64" width="12" height="8" fill="#FDDCB5"/>
+        <!-- Body / Robes -->
+        <path id="aang-robe" d="M35 72 L85 72 L90 145 L30 145 Z" fill="#FF9800"/>
+        <!-- Inner robe detail -->
+        <path d="M50 72 L70 72 L67 145 L53 145 Z" fill="#FFC107"/>
+        <!-- Belt -->
+        <rect x="35" y="90" width="50" height="6" rx="2" fill="#E65100"/>
+        <!-- Arms extended in airbending pose -->
+        <path d="M35 80 Q20 72 5 65" fill="none" stroke="#FDDCB5" stroke-width="9" stroke-linecap="round"/>
+        <path d="M85 80 Q100 72 115 65" fill="none" stroke="#FDDCB5" stroke-width="9" stroke-linecap="round"/>
+        <!-- Hands (open palm pushing) -->
+        <circle cx="5" cy="65" r="6" fill="#FDDCB5"/>
+        <circle cx="115" cy="65" r="6" fill="#FDDCB5"/>
+        <!-- Air swirl around hands -->
+        <circle cx="5" cy="65" r="10" fill="none" stroke="rgba(135,206,250,0.5)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <circle cx="115" cy="65" r="10" fill="none" stroke="rgba(135,206,250,0.5)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      </svg>
+      <!-- Wind blast effects -->
+      <div id="wind-effects" style="position: absolute; top: 20px; pointer-events: none;">
+        <svg width="200" height="120" viewBox="0 0 200 120" class="wind-blast" style="overflow: visible;">
+          <path d="M0,50 Q50,20 100,50 Q150,30 200,50" fill="none" stroke="rgba(135,206,250,0.7)" stroke-width="3" class="wind-line"/>
+          <path d="M0,35 Q60,5 120,35 Q170,15 200,30" fill="none" stroke="rgba(135,206,250,0.5)" stroke-width="2" class="wind-line"/>
+          <path d="M0,65 Q40,35 80,60 Q140,45 200,65" fill="none" stroke="rgba(135,206,250,0.6)" stroke-width="2.5" class="wind-line"/>
+          <path d="M0,50 Q70,80 140,50 Q180,70 200,55" fill="none" stroke="rgba(176,224,255,0.5)" stroke-width="2" class="wind-line"/>
+          <circle cx="70" cy="45" r="10" fill="none" stroke="rgba(135,206,250,0.4)" stroke-width="1.5" class="wind-swirl"/>
+          <circle cx="140" cy="55" r="8" fill="none" stroke="rgba(135,206,250,0.3)" stroke-width="1.5" class="wind-swirl"/>
+        </svg>
       </div>
     </div>
 
@@ -206,13 +389,36 @@
       const successCard = document.getElementById("success-card");
       const noBtn = document.getElementById("no-btn");
       const yesBtn = document.getElementById("yes-btn");
+      const heartShape = document.getElementById("heart-shape");
 
       let yesScale = 1;
 
-      // Initial setup for the No button to sit next to Yes initially
-      // We use absolute positioning for the dodge effect, so we need to set initial relative position logic
-      // But for simplicity in "dodging", we will switch it to absolute upon first hover.
+      // ===== Heart Screen Transition =====
+      function getHeartScale() {
+        const diagonal = Math.sqrt(window.innerWidth ** 2 + window.innerHeight ** 2);
+        return Math.ceil(diagonal / 50) + 3;
+      }
 
+      function heartTransition(callback) {
+        const scale = getHeartScale();
+
+        // Phase 1: Expand heart to cover screen
+        heartShape.style.transition = 'transform 0.8s cubic-bezier(0.68, -0.05, 0.27, 1.05)';
+        heartShape.style.transform = `rotate(-45deg) scale(${scale})`;
+
+        // Phase 2: Swap content while covered
+        setTimeout(() => {
+          callback();
+
+          // Phase 3: Collapse heart to reveal new content
+          setTimeout(() => {
+            heartShape.style.transition = 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+            heartShape.style.transform = 'rotate(-45deg) scale(0)';
+          }, 350);
+        }, 850);
+      }
+
+      // ===== Step Flow =====
       function nextStep() {
         step++;
 
@@ -226,54 +432,154 @@
             introText.classList.remove("fade-out");
             introText.classList.add("fade-in");
           } else {
-            // Transition to Question Card
-            introCard.classList.add("hidden");
-            questionCard.classList.remove("hidden");
-            questionCard.classList.add("fade-in");
-
-            // Position the No button relatively first, then make it tricky
-            // Just keeping it in flow for now
+            // Heart transition to Question Card
+            heartTransition(() => {
+              introCard.classList.add("hidden");
+              questionCard.classList.remove("hidden");
+            });
           }
-        }, 500); // Wait for fade out
+        }, 500);
       }
 
-      // The "No" button dodge logic
+      // ===== Aang Airbending the "No" Button =====
+      let aangTimeout = null;
+
       function dodgeButton() {
-        // Make Yes button bigger every time she tries to click No
+        // Make Yes button bigger
         yesScale += 0.2;
         yesBtn.style.transform = `scale(${yesScale})`;
 
-        const maxX = window.innerWidth - noBtn.offsetWidth - 50;
-        const maxY = window.innerHeight - noBtn.offsetHeight - 50;
+        // Get current No button position
+        const btnRect = noBtn.getBoundingClientRect();
+        const btnCenterX = btnRect.left + btnRect.width / 2;
+        const btnCenterY = btnRect.top + btnRect.height / 2;
 
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
+        // Position Aang container
+        const aangContainer = document.getElementById('aang-container');
+        const windEffects = document.getElementById('wind-effects');
+        const aangScale = window.innerWidth < 480 ? 0.6 : 0.85;
 
-        noBtn.style.position = "absolute"; // Ensure it breaks out of flex flow
-        noBtn.style.left = randomX + "px";
-        noBtn.style.top = randomY + "px";
+        // Determine direction: Aang appears on the side with more space
+        const spaceLeft = btnRect.left;
+        const spaceRight = window.innerWidth - btnRect.right;
+        const aangOnLeft = spaceLeft > 140 || spaceRight < 140;
+
+        if (aangOnLeft) {
+          aangContainer.style.left = (btnRect.left - 130 * aangScale) + 'px';
+          windEffects.style.left = '100px';
+          windEffects.style.transform = 'scaleX(1)';
+        } else {
+          aangContainer.style.left = (btnRect.right + 10) + 'px';
+          windEffects.style.left = '-200px';
+          windEffects.style.transform = 'scaleX(-1)';
+        }
+
+        aangContainer.style.top = Math.max(10, btnCenterY - 80 * aangScale) + 'px';
+        aangContainer.style.transform = `scale(${aangScale})`;
+        aangContainer.style.display = 'block';
+
+        // Restart Aang entrance animation
+        aangContainer.classList.remove('aang-enter');
+        void aangContainer.offsetWidth;
+        aangContainer.classList.add('aang-enter');
+
+        // Restart wind line animations
+        windEffects.querySelectorAll('.wind-line, .wind-swirl').forEach(el => {
+          el.style.animation = 'none';
+          void el.offsetWidth;
+          el.style.animation = '';
+        });
+
+        // Robe flutter
+        const robe = document.getElementById('aang-robe');
+        if (robe) {
+          robe.classList.remove('robe-flutter');
+          void robe.offsetWidth;
+          robe.classList.add('robe-flutter');
+        }
+
+        // Spawn wind particles
+        const particleOriginX = aangOnLeft ? btnRect.left - 10 : btnRect.right + 10;
+        spawnWindParticles(particleOriginX, btnCenterY, aangOnLeft ? 1 : -1);
+
+        // Calculate blow-away destination (away from Aang)
+        const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+        const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+        let newX, newY;
+
+        if (aangOnLeft) {
+          newX = Math.min(maxX, btnRect.left + 150 + Math.random() * 250);
+        } else {
+          newX = Math.max(20, btnRect.left - 150 - Math.random() * 250);
+        }
+        newY = Math.max(20, Math.min(maxY, btnCenterY + (Math.random() - 0.5) * 300));
+
+        // Animate the button blowing away
+        noBtn.style.position = 'absolute';
+        noBtn.style.transition = 'left 0.5s cubic-bezier(0.2, 0.8, 0.3, 1), top 0.5s cubic-bezier(0.2, 0.8, 0.3, 1), transform 0.5s ease';
+        noBtn.style.left = newX + 'px';
+        noBtn.style.top = newY + 'px';
+        noBtn.style.transform = `rotate(${(Math.random() - 0.5) * 40}deg)`;
+
+        // Hide Aang after effect
+        clearTimeout(aangTimeout);
+        aangTimeout = setTimeout(() => {
+          aangContainer.style.display = 'none';
+        }, 1200);
       }
 
-      // The "Yes" logic
+      // Wind particles
+      function spawnWindParticles(originX, originY, directionX) {
+        for (let i = 0; i < 10; i++) {
+          const particle = document.createElement('div');
+          const size = 4 + Math.random() * 8;
+          particle.style.cssText = `
+            position: fixed;
+            width: ${size}px;
+            height: ${size}px;
+            background: rgba(135, 206, 250, ${0.3 + Math.random() * 0.4});
+            border-radius: 50%;
+            left: ${originX}px;
+            top: ${originY + (Math.random() - 0.5) * 50}px;
+            z-index: 35;
+            pointer-events: none;
+            transition: all ${0.4 + Math.random() * 0.5}s ease-out;
+          `;
+          document.body.appendChild(particle);
+
+          requestAnimationFrame(() => {
+            particle.style.left = (originX + directionX * (80 + Math.random() * 180)) + 'px';
+            particle.style.top = (originY + (Math.random() - 0.5) * 100) + 'px';
+            particle.style.opacity = '0';
+            particle.style.transform = 'scale(0.2)';
+          });
+
+          setTimeout(() => particle.remove(), 1000);
+        }
+      }
+
+      // ===== "Yes" logic =====
       function acceptProposal() {
-        // Hide question, show success
-        questionCard.classList.add("hidden");
-        successCard.classList.remove("hidden");
+        heartTransition(() => {
+          questionCard.classList.add("hidden");
+          successCard.classList.remove("hidden");
 
-        // Launch Confetti
-        launchConfetti();
+          // Delay confetti until heart collapses
+          setTimeout(() => {
+            launchConfetti();
 
-        // Play a little continuous celebration loop
-        let duration = 5 * 1000;
-        let animationEnd = Date.now() + duration;
+            let duration = 5 * 1000;
+            let animationEnd = Date.now() + duration;
 
-        let interval = setInterval(function () {
-          let timeLeft = animationEnd - Date.now();
-          if (timeLeft <= 0) {
-            return clearInterval(interval);
-          }
-          launchConfetti();
-        }, 300);
+            let interval = setInterval(function () {
+              let timeLeft = animationEnd - Date.now();
+              if (timeLeft <= 0) {
+                return clearInterval(interval);
+              }
+              launchConfetti();
+            }, 300);
+          }, 750);
+        });
       }
 
       function launchConfetti() {
@@ -281,21 +587,22 @@
           particleCount: 150,
           spread: 100,
           origin: { y: 0.6 },
-          colors: ["#ff69b4", "#ff0000", "#ffffff"],
-          shapes: ["heart"], // Using heart shapes for confetti
+          colors: ["#ff69b4", "#ff0000", "#ffffff", "#FFD1DC"],
+          shapes: ["heart"],
         });
       }
 
-      // --- Background Floating Hearts Logic ---
+      // --- Background Floating Hearts/Hello Kitty Elements ---
       function createFloatingHeart() {
+        const symbols = ['❤️', '🎀', '✨', '🌸', '💕', '♡', '💖', '🩷'];
         const heart = document.createElement("div");
         heart.classList.add("floating-heart");
-        heart.innerHTML = "❤️";
+        heart.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
 
         // Randomize properties
         heart.style.left = Math.random() * 100 + "vw";
         heart.style.fontSize = Math.random() * 20 + 10 + "px";
-        heart.style.animationDuration = Math.random() * 10 + 10 + "s"; // 10-20s duration
+        heart.style.animationDuration = Math.random() * 10 + 10 + "s";
 
         document.getElementById("hearts-container").appendChild(heart);
 
@@ -305,7 +612,7 @@
         }, 20000);
       }
 
-      // Create a heart every 500ms
+      // Create a floating element every 500ms
       setInterval(createFloatingHeart, 500);
     </script>
   </body>
