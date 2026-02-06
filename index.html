@@ -21,28 +21,55 @@
       body {
         font-family: "Poppins", sans-serif;
         overflow: hidden; /* Prevent scrolling */
+        background: repeating-linear-gradient(
+          90deg,
+          #fff0f5 0px,
+          #fff0f5 40px,
+          #ffe4ef 40px,
+          #ffe4ef 80px
+        );
+      }
+
+      /* Hello Kitty pattern overlay */
+      .bg-pattern {
+        position: fixed;
+        inset: 0;
+        background: url('hellokitty-pattern.jpg') repeat;
+        background-size: 400px;
+        opacity: 0.15;
+        z-index: 0;
+        pointer-events: none;
       }
 
       .script-font {
         font-family: "Great Vibes", cursive;
       }
 
-      /* Floating Hearts Animation Background */
-      .floating-heart {
+      /* Floating Hello Kitty / Hearts Animation Background */
+      .floating-item {
         position: absolute;
-        color: rgba(255, 182, 193, 0.6);
-        animation: float 15s infinite linear;
-        z-index: 0;
+        animation: float-up 15s infinite linear;
+        z-index: 1;
         pointer-events: none;
+        opacity: 0.6;
       }
 
-      @keyframes float {
+      .floating-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      @keyframes float-up {
         0% {
-          transform: translateY(100vh) rotate(0deg);
-          opacity: 1;
+          transform: translateY(100vh) rotate(0deg) scale(1);
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 0.4;
         }
         100% {
-          transform: translateY(-10vh) rotate(360deg);
+          transform: translateY(-10vh) rotate(20deg) scale(0.8);
           opacity: 0;
         }
       }
@@ -233,13 +260,157 @@
         0% { opacity: 1; transform: scale(0.5); }
         100% { opacity: 0; transform: scale(3); }
       }
+
+      /* === Toph Earthbending === */
+      #toph {
+        position: fixed;
+        bottom: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 60;
+        pointer-events: none;
+        transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      #toph.visible {
+        bottom: 20px;
+      }
+
+      #toph img {
+        width: 200px;
+        height: auto;
+        filter: drop-shadow(0 0 20px rgba(139, 119, 42, 0.6));
+      }
+
+      #toph.stomping img {
+        animation: toph-stomp 0.5s ease-out forwards;
+      }
+
+      @keyframes toph-stomp {
+        0% { transform: translateY(0) scale(1); }
+        30% { transform: translateY(10px) scale(1.05, 0.95); }
+        50% { transform: translateY(-5px) scale(0.95, 1.05); }
+        100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 30px rgba(139, 119, 42, 1)); }
+      }
+
+      /* Rock projectiles */
+      .rock {
+        position: fixed;
+        z-index: 55;
+        pointer-events: none;
+        border-radius: 30% 70% 50% 50%;
+        background: radial-gradient(ellipse at 30% 30%, #c4a54d, #8B6914, #5a4510);
+        box-shadow: inset -3px -3px 6px rgba(0,0,0,0.4), 2px 2px 8px rgba(0,0,0,0.3);
+      }
+
+      .rock.flying {
+        animation: rock-fly var(--rock-duration, 0.6s) cubic-bezier(0.2, 0, 0.3, 1) forwards;
+      }
+
+      @keyframes rock-fly {
+        0% { opacity: 1; transform: translate(0, 0) rotate(0deg) scale(1); }
+        60% { opacity: 1; }
+        100% { opacity: 0; transform: translate(var(--rock-tx, 0px), var(--rock-ty, -300px)) rotate(var(--rock-rot, 360deg)) scale(0.3); }
+      }
+
+      /* Earth pillar rising from bottom */
+      .earth-pillar {
+        position: fixed;
+        bottom: 0;
+        z-index: 52;
+        pointer-events: none;
+        background: linear-gradient(180deg, #c4a54d 0%, #8B6914 40%, #5a4510 100%);
+        border-radius: 8px 8px 0 0;
+        box-shadow: inset -4px 0 8px rgba(0,0,0,0.3), inset 4px 0 8px rgba(0,0,0,0.1);
+      }
+
+      .earth-pillar.rising {
+        animation: pillar-rise var(--pillar-duration, 0.4s) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes pillar-rise {
+        0% { height: 0; opacity: 0.8; }
+        70% { height: var(--pillar-height, 100px); opacity: 1; }
+        100% { height: var(--pillar-height, 100px); opacity: 0; }
+      }
+
+      /* Earth crack lines on screen */
+      .earth-crack {
+        position: fixed;
+        bottom: 0;
+        z-index: 51;
+        width: 4px;
+        pointer-events: none;
+        background: linear-gradient(0deg, #8B6914, #c4a54d, transparent);
+      }
+
+      .earth-crack.active {
+        animation: crack-spread 0.5s ease-out forwards;
+      }
+
+      @keyframes crack-spread {
+        0% { height: 0; opacity: 1; }
+        60% { height: var(--crack-height, 150px); opacity: 0.8; }
+        100% { height: var(--crack-height, 150px); opacity: 0; }
+      }
+
+      /* Screen shake */
+      @keyframes screen-shake {
+        0%, 100% { transform: translate(0, 0); }
+        10% { transform: translate(-8px, 4px); }
+        20% { transform: translate(6px, -6px); }
+        30% { transform: translate(-4px, 8px); }
+        40% { transform: translate(8px, -2px); }
+        50% { transform: translate(-6px, -4px); }
+        60% { transform: translate(4px, 6px); }
+        70% { transform: translate(-2px, -8px); }
+        80% { transform: translate(6px, 2px); }
+        90% { transform: translate(-4px, 4px); }
+      }
+
+      body.shaking {
+        animation: screen-shake 0.5s ease-in-out;
+      }
+
+      /* Success card earth entrance */
+      #success-card.earth-entrance {
+        animation: card-earth-slam 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes card-earth-slam {
+        0% { opacity: 0; transform: translateY(100vh) scale(0.5) rotate(-5deg); }
+        50% { opacity: 1; transform: translateY(-30px) scale(1.05) rotate(2deg); }
+        70% { transform: translateY(10px) scale(0.98) rotate(-1deg); }
+        100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+      }
+
+      /* Earth dust burst */
+      .earth-dust {
+        position: fixed;
+        pointer-events: none;
+        z-index: 53;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(196,165,77,0.6) 0%, rgba(139,105,20,0.3) 50%, transparent 70%);
+      }
+
+      .earth-dust.burst {
+        animation: earth-dust-burst 0.8s ease-out forwards;
+      }
+
+      @keyframes earth-dust-burst {
+        0% { opacity: 1; transform: scale(0.3); }
+        100% { opacity: 0; transform: scale(4); }
+      }
     </style>
   </head>
   <body
-    class="bg-gradient-to-br from-pink-100 via-red-50 p-8 to-pink-200 h-screen w-screen flex flex-col items-center justify-center relative select-none"
+    class="p-8 h-screen w-screen flex flex-col items-center justify-center relative select-none"
   >
-    <!-- Background Decoration -->
-    <div id="hearts-container" class="absolute inset-0 overflow-hidden"></div>
+    <!-- Hello Kitty Pattern Overlay -->
+    <div class="bg-pattern"></div>
+
+    <!-- Floating Items Container -->
+    <div id="floats-container" class="absolute inset-0 overflow-hidden"></div>
 
     <!-- Aang -->
     <div id="aang">
@@ -250,10 +421,10 @@
     <!-- STAGE 1: The Intro / Build Up -->
     <div
       id="intro-card"
-      class="z-10 text-center max-w-lg p-8 bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-pink-100 transition-all duration-700"
+      class="z-10 text-center max-w-lg p-8 bg-white/85 backdrop-blur-sm rounded-3xl shadow-xl border-2 border-pink-300 transition-all duration-700"
     >
       <h1 class="text-3xl text-pink-600 mb-6 font-semibold" id="intro-text">
-        Hey Beautiful...
+        Hello Beautiful Benevolent Bubba.....
       </h1>
       <p class="text-gray-600 mb-8 hidden" id="intro-sub">
         I have something important to ask you.
@@ -261,7 +432,7 @@
 
       <button
         onclick="nextStep()"
-        class="bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 focus:outline-none ring-4 ring-pink-200"
+        class="bg-[#ff1493] hover:bg-[#e0117f] text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 focus:outline-none ring-4 ring-pink-300"
       >
         Click Me
       </button>
@@ -272,21 +443,17 @@
       id="question-card"
       class="hidden z-10 text-center max-w-2xl p-6 md:p-12 relative"
     >
-      <div
-        class="text-6xl md:text-8xl text-red-500 mb-4 heartbeat drop-shadow-md"
-      >
-        ❤️
-      </div>
+      <img
+        src="coraline.webp"
+        alt="Coraline"
+        class="w-48 md:w-64 mx-auto mb-4 rounded-2xl shadow-lg heartbeat"
+      />
 
       <h1
         class="script-font text-5xl md:text-7xl text-pink-600 mb-4 leading-tight"
       >
         Will you be my Valentine?
       </h1>
-
-      <p class="text-gray-600 mb-10 text-lg md:text-xl">
-        (I promise to buy you chocolate 🍫)
-      </p>
 
       <div class="flex justify-center gap-4 md:gap-8 items-center h-20">
         <!-- Yes Button -->
@@ -311,18 +478,23 @@
       </div>
     </div>
 
+    <!-- Toph -->
+    <div id="toph">
+      <img src="toph.png" alt="Toph Beifong" />
+    </div>
+
     <!-- STAGE 3: Success -->
     <div
       id="success-card"
-      class="hidden z-10 text-center max-w-2xl p-8 bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-pink-300 fade-in"
+      class="hidden z-10 text-center max-w-2xl p-8 bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-pink-300"
     >
       <h1 class="text-6xl md:text-8xl mb-4">🥰🎉</h1>
       <h2 class="script-font text-5xl md:text-7xl text-pink-600 mb-6">
         She said YES!
       </h2>
       <p class="text-xl text-gray-700 font-medium">
-        You just made me the happiest person in the world. <br />
-        I love you! ❤️
+        You have made me the happiest Bubba in the world. <br />
+        I LOVE YOU!!! ❤️
       </p>
       <div class="mt-8 text-sm text-gray-400">
         Screenshot this and send it to me!
@@ -334,10 +506,10 @@
 
       let step = 0;
       const messages = [
-        "Hey Beautiful...",
-        "We've made so many memories...",
-        "You make me smile every single day...",
-        "So I have a question...",
+        "Hello Beautiful Benevolent Bubba.....",
+        "Did you know you are the most perfect girl ever?",
+        "You are the shining sun in my life",
+        "Please consider this important question my love",
       ];
 
       const introCard = document.getElementById("intro-card");
@@ -527,26 +699,150 @@
         }, 900);
       }
 
-      // The "Yes" logic
+      // The "Yes" logic — Toph earthbending entrance
+      const toph = document.getElementById("toph");
+
       function acceptProposal() {
-        // Hide question, show success
+        // Hide question card
         questionCard.classList.add("hidden");
-        successCard.classList.remove("hidden");
 
-        // Launch Confetti
-        launchConfetti();
+        // Step 1: Toph rises from the bottom
+        toph.classList.add("visible");
 
-        // Play a little continuous celebration loop
-        let duration = 5 * 1000;
-        let animationEnd = Date.now() + duration;
+        // Step 2: After Toph appears, she stomps
+        setTimeout(() => {
+          toph.classList.add("stomping");
 
-        let interval = setInterval(function () {
-          let timeLeft = animationEnd - Date.now();
-          if (timeLeft <= 0) {
-            return clearInterval(interval);
-          }
-          launchConfetti();
-        }, 300);
+          // Screen shake on stomp
+          document.body.classList.add("shaking");
+          setTimeout(() => document.body.classList.remove("shaking"), 500);
+
+          // Earth cracks spread from bottom
+          createEarthCracks();
+
+          // Earth pillars rise
+          setTimeout(() => createEarthPillars(), 150);
+
+          // Rocks fly upward
+          setTimeout(() => createRockBarrage(), 200);
+
+          // Earth dust bursts
+          setTimeout(() => createEarthDustBursts(), 250);
+
+        }, 700);
+
+        // Step 3: Success card slams up from the ground
+        setTimeout(() => {
+          successCard.classList.remove("hidden");
+          successCard.classList.add("earth-entrance");
+
+          // Second screen shake on card landing
+          document.body.classList.add("shaking");
+          setTimeout(() => document.body.classList.remove("shaking"), 500);
+
+          // More dust on impact
+          setTimeout(() => {
+            const rect = successCard.getBoundingClientRect();
+            createEarthDustAt(rect.left + rect.width / 2, rect.bottom);
+            createEarthDustAt(rect.left, rect.bottom);
+            createEarthDustAt(rect.right, rect.bottom);
+          }, 100);
+
+          // Launch Confetti after card lands
+          setTimeout(() => {
+            launchConfetti();
+            let duration = 5 * 1000;
+            let animationEnd = Date.now() + duration;
+            let interval = setInterval(function () {
+              if (Date.now() > animationEnd) return clearInterval(interval);
+              launchConfetti();
+            }, 300);
+          }, 400);
+
+          // Fade Toph out after the show
+          setTimeout(() => {
+            toph.classList.remove("visible");
+            toph.classList.remove("stomping");
+          }, 2000);
+
+        }, 1500);
+      }
+
+      function createEarthCracks() {
+        const count = 8;
+        const centerX = window.innerWidth / 2;
+        for (let i = 0; i < count; i++) {
+          const crack = document.createElement("div");
+          crack.classList.add("earth-crack");
+          const spread = (i - count / 2) * 60 + (Math.random() - 0.5) * 40;
+          crack.style.left = (centerX + spread) + "px";
+          crack.style.setProperty("--crack-height", (80 + Math.random() * 120) + "px");
+          crack.style.transform = `rotate(${(Math.random() - 0.5) * 15}deg)`;
+          document.body.appendChild(crack);
+          setTimeout(() => crack.classList.add("active"), i * 30);
+          setTimeout(() => crack.remove(), 1000);
+        }
+      }
+
+      function createEarthPillars() {
+        const count = 6;
+        for (let i = 0; i < count; i++) {
+          const pillar = document.createElement("div");
+          pillar.classList.add("earth-pillar");
+          const x = Math.random() * window.innerWidth;
+          pillar.style.left = x + "px";
+          pillar.style.width = (20 + Math.random() * 30) + "px";
+          pillar.style.setProperty("--pillar-height", (60 + Math.random() * 140) + "px");
+          pillar.style.setProperty("--pillar-duration", (0.3 + Math.random() * 0.3) + "s");
+          document.body.appendChild(pillar);
+          setTimeout(() => pillar.classList.add("rising"), i * 60);
+          setTimeout(() => pillar.remove(), 1200);
+        }
+      }
+
+      function createRockBarrage() {
+        const centerX = window.innerWidth / 2;
+        const startY = window.innerHeight - 50;
+        for (let i = 0; i < 12; i++) {
+          setTimeout(() => {
+            const rock = document.createElement("div");
+            rock.classList.add("rock");
+            const size = 15 + Math.random() * 30;
+            rock.style.width = size + "px";
+            rock.style.height = size * (0.7 + Math.random() * 0.3) + "px";
+            rock.style.left = (centerX + (Math.random() - 0.5) * 300) + "px";
+            rock.style.top = startY + "px";
+            rock.style.setProperty("--rock-tx", ((Math.random() - 0.5) * 400) + "px");
+            rock.style.setProperty("--rock-ty", (-200 - Math.random() * 400) + "px");
+            rock.style.setProperty("--rock-rot", (Math.random() * 720 - 360) + "deg");
+            rock.style.setProperty("--rock-duration", (0.4 + Math.random() * 0.5) + "s");
+            document.body.appendChild(rock);
+            requestAnimationFrame(() => rock.classList.add("flying"));
+            setTimeout(() => rock.remove(), 1500);
+          }, i * 40);
+        }
+      }
+
+      function createEarthDustBursts() {
+        const centerX = window.innerWidth / 2;
+        const bottomY = window.innerHeight - 40;
+        for (let i = 0; i < 4; i++) {
+          setTimeout(() => {
+            createEarthDustAt(centerX + (Math.random() - 0.5) * 200, bottomY);
+          }, i * 80);
+        }
+      }
+
+      function createEarthDustAt(x, y) {
+        const dust = document.createElement("div");
+        dust.classList.add("earth-dust");
+        dust.style.width = "80px";
+        dust.style.height = "80px";
+        dust.style.left = (x - 40) + "px";
+        dust.style.top = (y - 40) + "px";
+        document.body.appendChild(dust);
+        requestAnimationFrame(() => dust.classList.add("burst"));
+        setTimeout(() => dust.remove(), 1000);
       }
 
       function launchConfetti() {
@@ -559,27 +855,40 @@
         });
       }
 
-      // --- Background Floating Hearts Logic ---
-      function createFloatingHeart() {
-        const heart = document.createElement("div");
-        heart.classList.add("floating-heart");
-        heart.innerHTML = "❤️";
+      // --- Background Floating Hello Kitty + Hearts Logic ---
+      const floatItems = ["hellokitty.webp", "heart", "hellokitty.webp", "bow", "heart"];
 
-        // Randomize properties
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.fontSize = Math.random() * 20 + 10 + "px";
-        heart.style.animationDuration = Math.random() * 10 + 10 + "s"; // 10-20s duration
+      function createFloatingItem() {
+        const item = document.createElement("div");
+        item.classList.add("floating-item");
 
-        document.getElementById("hearts-container").appendChild(heart);
+        const pick = floatItems[Math.floor(Math.random() * floatItems.length)];
+        const size = 30 + Math.random() * 40;
 
-        // Cleanup after animation
-        setTimeout(() => {
-          heart.remove();
-        }, 20000);
+        if (pick === "hellokitty.webp") {
+          const img = document.createElement("img");
+          img.src = "hellokitty.webp";
+          img.alt = "";
+          item.appendChild(img);
+          item.style.width = size + "px";
+          item.style.height = size + "px";
+        } else if (pick === "heart") {
+          item.innerHTML = "❤️";
+          item.style.fontSize = (size * 0.6) + "px";
+        } else if (pick === "bow") {
+          item.innerHTML = "🎀";
+          item.style.fontSize = (size * 0.6) + "px";
+        }
+
+        item.style.left = Math.random() * 100 + "vw";
+        item.style.animationDuration = (Math.random() * 10 + 10) + "s";
+
+        document.getElementById("floats-container").appendChild(item);
+
+        setTimeout(() => { item.remove(); }, 20000);
       }
 
-      // Create a heart every 500ms
-      setInterval(createFloatingHeart, 500);
+      setInterval(createFloatingItem, 600);
     </script>
   </body>
 </html>
