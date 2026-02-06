@@ -544,11 +544,21 @@
     </div>
 
     <script>
-      // --- Password Protection ---
-      function checkPassword() {
+      // --- Password Protection (hashed) ---
+      async function hashPassword(pw) {
+        const encoded = new TextEncoder().encode(pw);
+        const buffer = await crypto.subtle.digest("SHA-256", encoded);
+        return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, "0")).join("");
+      }
+
+      // Pre-computed SHA-256 hash (password is not stored in plain text)
+      const correctHash = "82e0e1785e5308c0b73e80ed29a1ed0fcc8243abf470a21cc1410737e4ead044";
+
+      async function checkPassword() {
         const input = document.getElementById("password-input");
         const error = document.getElementById("password-error");
-        if (input.value === "Bubbinsky") {
+        const inputHash = await hashPassword(input.value);
+        if (inputHash === correctHash) {
           const screen = document.getElementById("password-screen");
           screen.style.transition = "opacity 0.8s ease";
           screen.style.opacity = "0";
