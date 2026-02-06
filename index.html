@@ -98,6 +98,141 @@
           transform: scale(1.1);
         }
       }
+
+      /* Aang Character */
+      #aang {
+        position: fixed;
+        z-index: 50;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #aang.visible {
+        opacity: 1;
+      }
+
+      .aang-body {
+        width: 150px;
+        height: auto;
+        filter: drop-shadow(0 0 15px rgba(135, 206, 250, 0.8));
+        animation: aang-float 1.5s ease-in-out infinite;
+      }
+
+      @keyframes aang-float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+
+      /* Aang airbending pose glow */
+      #aang.bending .aang-body {
+        animation: aang-bend 0.4s ease-out forwards;
+      }
+
+      @keyframes aang-bend {
+        0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(135, 206, 250, 0.8)); }
+        50% { transform: scale(1.2); filter: drop-shadow(0 0 30px rgba(135, 206, 250, 1)) brightness(1.3); }
+        100% { transform: scale(1.1); filter: drop-shadow(0 0 25px rgba(135, 206, 250, 0.9)); }
+      }
+
+      /* Arrow tattoo glow */
+      .arrow-glow {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30px;
+        height: 30px;
+        background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(135,206,250,0.6) 40%, transparent 70%);
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      #aang.bending .arrow-glow {
+        animation: glow-pulse 0.6s ease-out forwards;
+      }
+
+      @keyframes glow-pulse {
+        0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+        50% { opacity: 1; transform: translateX(-50%) scale(1.5); }
+        100% { opacity: 0.8; transform: translateX(-50%) scale(1.2); }
+      }
+
+      /* Wind gust lines */
+      .wind-line {
+        position: fixed;
+        height: 3px;
+        border-radius: 3px;
+        background: linear-gradient(90deg, rgba(135,206,250,0.8), rgba(255,255,255,0.6), transparent);
+        z-index: 45;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      .wind-line.active {
+        animation: wind-gust var(--wind-duration, 0.5s) ease-out forwards;
+      }
+
+      @keyframes wind-gust {
+        0% { opacity: 0; transform: scaleX(0) translateX(0); }
+        20% { opacity: 0.9; }
+        100% { opacity: 0; transform: scaleX(1) translateX(var(--wind-travel, 300px)); }
+      }
+
+      /* Air swirl particles */
+      .air-swirl {
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        border: 2px solid rgba(135, 206, 250, 0.7);
+        border-radius: 50%;
+        border-top-color: transparent;
+        border-right-color: transparent;
+        z-index: 45;
+        pointer-events: none;
+      }
+
+      .air-swirl.active {
+        animation: swirl var(--swirl-duration, 0.8s) ease-out forwards;
+      }
+
+      @keyframes swirl {
+        0% { opacity: 1; transform: rotate(0deg) scale(0.3) translate(0, 0); }
+        100% { opacity: 0; transform: rotate(720deg) scale(1.5) translate(var(--swirl-x, 100px), var(--swirl-y, -50px)); }
+      }
+
+      /* Blown away button effect */
+      .blown-away {
+        transition: none !important;
+        animation: blow-away 0.8s ease-in forwards !important;
+      }
+
+      @keyframes blow-away {
+        0% { transform: rotate(0deg) scale(1); opacity: 1; }
+        30% { transform: rotate(15deg) scale(0.9); opacity: 0.9; }
+        100% { transform: rotate(360deg) scale(0.2) translate(var(--blow-x, 500px), var(--blow-y, -300px)); opacity: 0; }
+      }
+
+      /* Dust cloud at button's original position */
+      .dust-cloud {
+        position: fixed;
+        pointer-events: none;
+        z-index: 44;
+        width: 60px;
+        height: 60px;
+        background: radial-gradient(circle, rgba(135,206,250,0.4) 0%, rgba(255,255,255,0.2) 40%, transparent 70%);
+        border-radius: 50%;
+        animation: dust-poof 0.6s ease-out forwards;
+      }
+
+      @keyframes dust-poof {
+        0% { opacity: 1; transform: scale(0.5); }
+        100% { opacity: 0; transform: scale(3); }
+      }
     </style>
   </head>
   <body
@@ -105,6 +240,12 @@
   >
     <!-- Background Decoration -->
     <div id="hearts-container" class="absolute inset-0 overflow-hidden"></div>
+
+    <!-- Aang -->
+    <div id="aang">
+      <div class="arrow-glow"></div>
+      <img src="aang.webp" alt="Avatar Aang" class="aang-body" />
+    </div>
 
     <!-- STAGE 1: The Intro / Build Up -->
     <div
@@ -237,21 +378,153 @@
         }, 500); // Wait for fade out
       }
 
-      // The "No" button dodge logic
+      // --- Aang Airbending Logic ---
+      const aang = document.getElementById("aang");
+      let isAirbending = false;
+      let dodgeCount = 0;
+
       function dodgeButton() {
-        // Make Yes button bigger every time she tries to click No
+        if (isAirbending) return;
+        isAirbending = true;
+        dodgeCount++;
+
+        // Grow the Yes button
         yesScale += 0.2;
         yesBtn.style.transform = `scale(${yesScale})`;
 
-        const maxX = window.innerWidth - noBtn.offsetWidth - 50;
-        const maxY = window.innerHeight - noBtn.offsetHeight - 50;
+        // Get No button position
+        const btnRect = noBtn.getBoundingClientRect();
+        const btnCenterX = btnRect.left + btnRect.width / 2;
+        const btnCenterY = btnRect.top + btnRect.height / 2;
 
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
+        // Position Aang to the left of the button (or random side)
+        const side = Math.random() > 0.5 ? -1 : 1;
+        const aangX = btnCenterX + (side * -180);
+        const aangY = btnCenterY - 50;
 
-        noBtn.style.position = "absolute"; // Ensure it breaks out of flex flow
-        noBtn.style.left = randomX + "px";
-        noBtn.style.top = randomY + "px";
+        aang.style.left = aangX + "px";
+        aang.style.top = aangY + "px";
+        // Flip Aang so he always faces the button
+        aang.style.transform = side < 0 ? "scaleX(1)" : "scaleX(-1)";
+        aang.classList.remove("bending");
+        aang.classList.add("visible");
+
+        // After Aang appears, start airbending
+        setTimeout(() => {
+          aang.classList.add("bending");
+
+          // Create wind gust lines from Aang toward the button
+          createWindEffects(aangX + (side * 60), aangY + 40, side);
+
+          // Create air swirl particles
+          createAirSwirls(btnCenterX, btnCenterY, side);
+
+          // Create dust cloud at button position
+          setTimeout(() => {
+            createDustCloud(btnCenterX, btnCenterY);
+          }, 200);
+
+          // Blow the button away
+          setTimeout(() => {
+            blowButtonAway(side);
+          }, 300);
+
+        }, 400);
+      }
+
+      function createWindEffects(startX, startY, direction) {
+        for (let i = 0; i < 8; i++) {
+          setTimeout(() => {
+            const line = document.createElement("div");
+            line.classList.add("wind-line");
+
+            const yOffset = (Math.random() - 0.5) * 80;
+            const width = 60 + Math.random() * 100;
+            const travel = direction * (150 + Math.random() * 200);
+
+            line.style.left = startX + "px";
+            line.style.top = (startY + yOffset) + "px";
+            line.style.width = width + "px";
+            line.style.setProperty("--wind-travel", travel + "px");
+            line.style.setProperty("--wind-duration", (0.3 + Math.random() * 0.4) + "s");
+
+            if (direction < 0) {
+              line.style.transform = "scaleX(-1)";
+            }
+
+            document.body.appendChild(line);
+            requestAnimationFrame(() => line.classList.add("active"));
+
+            setTimeout(() => line.remove(), 1000);
+          }, i * 50);
+        }
+      }
+
+      function createAirSwirls(centerX, centerY, direction) {
+        for (let i = 0; i < 6; i++) {
+          setTimeout(() => {
+            const swirl = document.createElement("div");
+            swirl.classList.add("air-swirl");
+
+            const size = 8 + Math.random() * 16;
+            swirl.style.width = size + "px";
+            swirl.style.height = size + "px";
+            swirl.style.left = (centerX - size / 2 + (Math.random() - 0.5) * 40) + "px";
+            swirl.style.top = (centerY - size / 2 + (Math.random() - 0.5) * 40) + "px";
+            swirl.style.setProperty("--swirl-x", (direction * (80 + Math.random() * 120)) + "px");
+            swirl.style.setProperty("--swirl-y", ((Math.random() - 0.5) * 150) + "px");
+            swirl.style.setProperty("--swirl-duration", (0.5 + Math.random() * 0.5) + "s");
+
+            document.body.appendChild(swirl);
+            requestAnimationFrame(() => swirl.classList.add("active"));
+
+            setTimeout(() => swirl.remove(), 1500);
+          }, i * 70);
+        }
+      }
+
+      function createDustCloud(x, y) {
+        const dust = document.createElement("div");
+        dust.classList.add("dust-cloud");
+        dust.style.left = (x - 30) + "px";
+        dust.style.top = (y - 30) + "px";
+        document.body.appendChild(dust);
+        setTimeout(() => dust.remove(), 800);
+      }
+
+      function blowButtonAway(direction) {
+        const blowX = direction * (400 + Math.random() * 300);
+        const blowY = -200 + Math.random() * 400 - 200;
+
+        noBtn.style.setProperty("--blow-x", blowX + "px");
+        noBtn.style.setProperty("--blow-y", blowY + "px");
+        noBtn.classList.add("blown-away");
+
+        // After blown away, reset and reposition
+        setTimeout(() => {
+          noBtn.classList.remove("blown-away");
+          noBtn.style.position = "absolute";
+
+          const maxX = window.innerWidth - noBtn.offsetWidth - 80;
+          const maxY = window.innerHeight - noBtn.offsetHeight - 80;
+          const newX = Math.max(40, Math.random() * maxX);
+          const newY = Math.max(40, Math.random() * maxY);
+
+          noBtn.style.left = newX + "px";
+          noBtn.style.top = newY + "px";
+          noBtn.style.opacity = "1";
+          noBtn.style.transform = "scale(1)";
+
+          // Hide Aang
+          aang.classList.remove("visible", "bending");
+
+          // Shrink the No button over time
+          const shrink = Math.max(0.5, 1 - dodgeCount * 0.1);
+          noBtn.style.fontSize = (20 * shrink) + "px";
+          noBtn.style.padding = `${16 * shrink}px ${40 * shrink}px`;
+
+          isAirbending = false;
+        }, 900);
       }
 
       // The "Yes" logic
